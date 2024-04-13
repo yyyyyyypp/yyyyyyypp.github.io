@@ -1,0 +1,104 @@
+ <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Intro to MapView - Create a 2D map | Sample | ArcGIS Maps SDK for JavaScript 4.29</title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.29/"></script>
+
+    <script>
+      require(["esri/Map", 
+      "esri/views/MapView",
+      "esri/layers/FeatureLayer",
+      "esri/layers/TileLayer",
+      "esri/widgets/Legend",
+      "esri/widgets/ScaleBar",
+      "esri/widgets/Search",
+      "esri/widgets/LayerList",
+      "esri/widgets/CoordinateConversion"
+     
+      ], (Map, MapView,FeatureLayer,TileLayer,Legend,ScaleBar,Search,LayerList,CoordinateConversion) => {
+        var flayer = new FeatureLayer({url:"https://www.geosceneonline.cn/server/rest/services/Hosted/%E5%85%A8%E5%9B%BD%E5%90%84%E7%9C%81%E5%A6%87%E5%B9%BC%E4%BF%9D%E5%81%A5%E9%99%A2%E6%95%B0/FeatureServer"});
+        
+         var tiledlayer = new TileLayer({url:"https://tiles.arcgis.com/tiles/nzS0F0zdNLvs7nc8/arcgis/rest/services/China_PopDens_2020/MapServer"});
+        
+        const map1 = new Map({
+          basemap: "topo",
+          layers:[flayer,tiledlayer]
+        });
+       // map.basemap="hybrid";
+
+        const view1 = new MapView({
+          container: "viewDiv",
+          map: map1,
+          zoom: 5,
+          center: [107, 36] // longitude, latitude
+        });
+        //图例
+        var legend1 = new Legend({
+            view: view1,
+            layerInfos:[{
+              layer:flayer,
+              title:"妇幼保健院数"
+            }]
+      });
+      view1.ui.add(legend1, "bottom-right");
+      var legend2 = new Legend({
+            view: view1,
+            layerInfos:[{
+              layer:tiledlayer,
+              title:"人口密度"
+            }]
+      });
+      view1.ui.add(legend2, "bottom-right");
+      //比例尺
+      var scaleBar1 = new ScaleBar({
+      view: view1,
+      style:"ruler",
+      unit:"metric"
+      });
+      view1.ui.add(scaleBar1, {
+      position: "bottom-left"
+});
+
+      //搜索框
+      var searchWidget1 = new Search({
+      view: view1
+       });
+
+      view1.ui.add(searchWidget1, {
+      position: "top-left",
+      index: 2
+});
+     //图层列表
+     var layerList1 = new LayerList({
+     view: view1
+     });
+     view1.ui.add(layerList1, {
+     position: "top-right"
+});
+    //坐标
+     var ccWidget = new CoordinateConversion({
+          view: view1
+     });
+     view1.ui.add(ccWidget, "bottom-left");
+
+      
+      
+      
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>
